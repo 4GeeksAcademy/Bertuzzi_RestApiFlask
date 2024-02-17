@@ -38,6 +38,24 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+# Declare new endpoints
+
+@app.route('/member', methods=['POST'])
+def new_member():
+    member = request.json
+    jackson_family.add_member(member)
+    return 'New member added'
+
+@app.route('/member/<int:member_id>', methods = ['GET'])
+def fetch_member(member_id):
+    member = jackson_family.get_member(member_id)
+    return member
+
+@app.route('/member/<int:member_id>', methods = ['DELETE'])
+def delete_member(member_id):
+    jackson_family.delete_member(member_id)
+    return 'member deleted', jackson_family._members
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
