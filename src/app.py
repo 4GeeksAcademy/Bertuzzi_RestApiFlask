@@ -40,16 +40,25 @@ def handle_hello():
 
 # Declare new endpoints
 
-@app.route('/member', methods=['POST'])
+@app.route('/members', methods=['POST'])
 def new_member():
     member = request.json
-    jackson_family.add_member(member)
-    return 'New member added'
+    response_body = jackson_family.add_member(member)
+    return response_body
+
+# Fetch family member
 
 @app.route('/member/<int:member_id>', methods = ['GET'])
 def fetch_member(member_id):
-    member = jackson_family.get_member(member_id)
-    return member
+    if any(obj['id'] == member_id for obj in jackson_family._members):
+        member = jackson_family.get_member(member_id)
+        response_body = {
+            "message": "member fetched",
+            "results": member
+        }
+        return response_body, 200
+    else:
+        return 'not found', 404
 
 @app.route('/member/<int:member_id>', methods = ['DELETE'])
 def delete_member(member_id):
