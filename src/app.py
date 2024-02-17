@@ -35,13 +35,20 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-# Add family member (to complete // error messages)
+# Add family member (completed)
 
 @app.route('/members', methods=['POST'])
 def new_member():
     member = request.json
-    response_body = jackson_family.add_member(member)
-    return response_body
+    if not 'first_name' in member or not 'age' in member or not 'lucky_numbers' in member:
+            return 'Mandatory data missing!', 400
+    else:
+        new_member = jackson_family.add_member(member)
+        response_body = {
+            "message":"new member added to family Jackson!",
+            "results": new_member
+        }
+        return response_body,200
 
 # Fetch family member (completed)
 

@@ -30,16 +30,14 @@ class FamilyStructure:
         return randint(0, 99999999)
 
     def add_member(self, member):
-        if not 'first_name' in member or not 'age' in member or not 'lucky_numbers' in member:
-            return 'Mandatory data missing!', 400
-        elif 'id' in member:
+        if 'id' in member:
                 member["last_name"] = self.last_name
                 self._members.append(member)
-                return 'New member added!'
+                return member
         else:
                 member['id'] = self._generateId()
                 self._members.append(member)
-                return 'New member added!'
+                return member
     
     def get_member(self, id):
         for member in self._members:
