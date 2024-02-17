@@ -1,6 +1,3 @@
-"""
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
-"""
 import os
 from flask import Flask, request, jsonify, url_for
 from flask_cors import CORS
@@ -38,7 +35,7 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-# Declare new endpoints
+# Add family member (to complete // error messages)
 
 @app.route('/members', methods=['POST'])
 def new_member():
@@ -46,7 +43,7 @@ def new_member():
     response_body = jackson_family.add_member(member)
     return response_body
 
-# Fetch family member
+# Fetch family member (completed)
 
 @app.route('/member/<int:member_id>', methods = ['GET'])
 def fetch_member(member_id):
@@ -58,12 +55,21 @@ def fetch_member(member_id):
         }
         return response_body, 200
     else:
-        return 'not found', 404
+        return 'Member not found', 404
+    
+# Delete family member (completed)
 
 @app.route('/member/<int:member_id>', methods = ['DELETE'])
 def delete_member(member_id):
-    jackson_family.delete_member(member_id)
-    return 'member deleted', jackson_family._members
+    if any(obj['id'] == member_id for obj in jackson_family._members):
+        jackson_family.delete_member(member_id)
+        response_body = {
+            "message":"Member deleted",
+            "updated family":jackson_family._members
+        }
+        return response_body,200
+    else:
+        return 'Member not found', 404
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
